@@ -1,0 +1,57 @@
+Trabalho Final da Disciplina: Implantação e Avaliação de Aplicações em Nuvem
+Este trabalho final é um projeto prático que integra conceitos fundamentais de Computação em Nuvem, DevOps e desenvolvimento de software. Ele será dividido em duas partes distintas, totalizando 10 pontos na segunda nota da disciplina.
+
+
+Parte 01: Desenvolvimento e Implantação de Aplicação Web com CI/CD na AWS (8 pontos)
+Formato: Duplas
+
+Objetivo: Projetar, desenvolver e implantar uma aplicação web na AWS, utilizando as melhores práticas de integração contínua e entrega contínua (CI/CD) através do GitHub Actions.
+
+Requisitos e Entregáveis:
+
+Aplicação Web:
+Desenvolver uma aplicação web simples (Ex: lista de tarefas, gerenciador de contatos básico, etc.).
+A aplicação deve ser dividida em front-end e back-end.
+O back-end não pode ser desenvolvido em JavaScript. Sinta-se à vontade para usar linguagens como Python, Java, Go, PHP, C#, Ruby, etc.
+Deve incluir persistência de dados utilizando um banco de dados relacional. Escolha um serviço de banco de dados relacional na AWS (ex: Amazon RDS, ou configurar um banco de dados em uma instância EC2, se preferir).
+A arquitetura da aplicação deve ser adequada para a implantação na nuvem (ex: separar as responsabilidades do front-end e back-end, configurar variáveis de ambiente para conexão com o banco de dados, etc.).
+Infraestrutura e Implantação em Nuvem (AWS Academy):
+A aplicação deve ser implantada utilizando o ambiente de laboratório fornecido pelo AWS Academy.
+A escolha dos serviços AWS para hospedagem do front-end e back-end fica a critério da dupla (ex: EC2, Elastic Beanstalk, S3 para front-end estático + EC2/Lambda para back-end, etc.), desde que a solução seja funcional e demonstre o uso da infraestrutura AWS.
+Controle de Versão e CI/CD com GitHub:
+Repositório GitHub: Criar um repositório privado no GitHub para a dupla. Todo o código-fonte (front-end, back-end e scripts de implantação) deve estar versionado neste repositório.
+GitHub Actions: Configurar um pipeline de CI/CD robusto usando GitHub Actions.
+O pipeline deve ser configurado para que, a cada push na branch main, a aplicação seja automaticamente construída (se necessário), testada (opcional, mas recomendado) e atualizada/implantada na nuvem AWS.
+O pipeline deve apresentar logs claros das etapas de construção e implantação.
+Uso de LLMs:
+O uso de Large Language Models (LLMs), como ChatGPT, Gemini, Copilot, etc., para geração de código, scripts de CI/CD ou auxiliar na arquitetura é permitido e encorajado. Lembre-se que o entendimento e a adaptação do código gerado são de sua responsabilidade.
+Entrega da Parte 01:
+
+Link do Repositório GitHub: A dupla deverá submeter o link do repositório privado do GitHub. Certifique-se de que o professor (ou avaliadores) tenha acesso de leitura ao repositório.
+Demonstração: Uma breve demonstração da aplicação funcionando na nuvem, com o pipeline de CI/CD em ação (ex: fazendo uma pequena alteração no código e mostrando a atualização automática na nuvem). Isso pode ser feito através de um vídeo gravado ou em aula, conforme orientação do professor.
+Documentação (README.md): Um arquivo README.md no repositório com as seguintes informações:
+Nomes dos integrantes da dupla.
+Breve descrição da aplicação e suas funcionalidades.
+Tecnologias utilizadas (linguagens, frameworks, banco de dados, serviços AWS).
+Instruções claras para configurar o ambiente e rodar a aplicação localmente (se aplicável, para fins de teste e depuração).
+Explicação do pipeline de CI/CD (o que cada etapa faz).
+Instruções para acessar a aplicação implantada na AWS.
+Critérios de Avaliação (Parte 01 - 8 pontos):
+
+2 pontos: Funcionalidade da Aplicação (Front-end, Back-end e persistência de dados).
+3 pontos: Configuração e Eficiência do Pipeline CI/CD com GitHub Actions (automação da implantação, clareza dos logs, robustez).
+2 pontos: Uso Adequado da Infraestrutura AWS (escolha dos serviços, configuração, acessibilidade da aplicação).
+1 ponto: Organização do Código, Repositório GitHub e Qualidade da Documentação (README.md).
+
+Parte 02: Avaliação de Sistema de TCC (2 pontos) - Será disponibilizada na semana de13/07 a 19/07.
+Formato: Individual
+
+Objetivo: Participar ativamente da avaliação de um sistema desenvolvido como parte de um Trabalho de Conclusão de Curso (TCC) de um colega.
+
+Requisitos e Entregáveis:
+
+Interação com o Sistema: Você receberá instruções específicas para acessar e interagir com um sistema de TCC. As instruções detalharão as tarefas a serem realizadas dentro do sistema.
+Preenchimento de Formulário de Avaliação: Após interagir com o sistema, você deverá preencher um formulário online. Este formulário conterá perguntas sobre a usabilidade, funcionalidade, desempenho e sua experiência geral com o sistema avaliado.
+Critérios de Avaliação (Parte 02 - 2 pontos):
+
+A nota desta parte é garantida pela participação completa na avaliação e pelo preenchimento integral do formulário. Não há respostas "certas" ou "erradas" no formulário; o objetivo é coletar feedback sincero e construtivo.

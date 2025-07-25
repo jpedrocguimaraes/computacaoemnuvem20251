@@ -1,0 +1,98 @@
+name: Deploy to AWS EC2
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v3
+      with:
+        python-version: '3.9'
+    
+    - name: Install backend dependencies
+      run: |
+        cd backend
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Test backend
+      run: |
+        cd backend
+        python -c "from main import app; print('Backend imports successfully')"
+    
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+    
+    - name: Install frontend dependencies
+      run: |
+        cd frontend
+        npm install
+    
+    - name: Build frontend
+      run: |
+        cd frontend
+        npm run build
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Deploy to EC2
+      env:
+        PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
+        HOSTNAME: ${{ secrets.EC2_HOST }}
+        USER_NAME: ${{ secrets.EC2_USER }}
+      run: |
+        # Criar arquivo de chave SSH
+        echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
+        
+        # Fazer backup e atualizar código no servidor
+        ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
+          # Parar aplicação atual
+          pm2 stop todo-backend || true
+          
+          # Backup do banco de dados
+          if [ -f /home/ec2-user/app/backend/tasks.db ]; then
+            cp /home/ec2-user/app/backend/tasks.db /home/ec2-user/app/backend/tasks.db.backup.$(date +%Y%m%d_%H%M%S)
+          fi
+          
+          # Remover código antigo (mantendo backups)
+          rm -rf /home/ec2-user/app_old
+          if [ -d /home/ec2-user/app ]; then
+            mv /home/ec2-user/app /home/ec2-user/app_old
+          fi
+          
+          # Criar diretório da aplicação
+          mkdir -p /home/ec2-user/app
+        '
+        
+        # Enviar código para o servidor
+        scp -o StrictHostKeyChecking=no -i private_key -r . ${USER_NAME}@${HOSTNAME}:/home/ec2-user/app/
+        
+        # Executar deploy no servidor
+        ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
+          cd /home/ec2-user/app
+          chmod +x deploy.sh
+          ./deploy.sh
+          
+          # Verificar se a aplicação está rodando
+          sleep 10
+          curl -f http://localhost:8000/health || (echo "Backend health check failed" && exit 1)
+          
+          echo "Deploy concluído com sucesso!"
+        '
