@@ -85,7 +85,7 @@ function App() {
   return (
     <div className="container">
       <div className="header">
-        <h1>📝 Lista de Tarefas</h1>
+        <h1>📝 Lista de Tarefas - Correção</h1>
         <p>Gerencie suas tarefas de forma simples e eficiente!!!</p>
       </div>
 
