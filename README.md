@@ -1,8 +1,8 @@
 # 📝 Lista de Tarefas - Aplicação Web com CI/CD
 
 ## 👥 Integrantes da Dupla
-- [Seu Nome]
-- [Nome do Parceiro]
+- João Pedro Cordeiro Guimarães - 493703
+- Francisco Ulisses Alves de Lima - 496549
 
 ## 📖 Descrição da Aplicação
 
