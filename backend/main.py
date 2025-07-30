@@ -12,6 +12,7 @@ import os
 load_dotenv()
 
 # Database setup
+<<<<<<< HEAD
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./tasks.db")
 
 # Configuração específica para diferentes tipos de banco
@@ -32,6 +33,13 @@ else:
     # Fallback para outros bancos
     engine = create_engine(DATABASE_URL)
 
+=======
+if os.getenv("GITHUB_ACTIONS") == "true":
+    DATABASE_URL = "sqlite:///./test.db"
+else:
+    DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:////home/ec2-user/dbdata/tasks.db")
+engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
+>>>>>>> 89405318d908d3f098b146b6bb95513afa663052
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 

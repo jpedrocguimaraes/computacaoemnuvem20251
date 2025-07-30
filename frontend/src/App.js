@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 // Configuração da base URL da API
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+const API_BASE_URL = process.env.REACT_APP_API_URL || '/api';
 const api = axios.create({
   baseURL: API_BASE_URL,
 });
@@ -85,7 +85,7 @@ function App() {
   return (
     <div className="container">
       <div className="header">
-        <h1>📝 Lista de Tarefas</h1>
+        <h1>📝 Lista de Tarefas - Correção</h1>
         <p>Gerencie suas tarefas de forma simples e eficiente!!!</p>
       </div>
 

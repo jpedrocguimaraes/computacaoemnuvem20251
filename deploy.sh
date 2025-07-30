@@ -1,25 +1,24 @@
 #!/bin/bash
 
-# Script de deploy para EC2
 echo "=== Iniciando Deploy da Aplicação ==="
 
-# Atualizar sistema
+# Atualizar pacotes essenciais
 sudo yum update -y
 
-# Instalar Python 3 e pip se não estiver instalado
+# Instalar Python 3 e pip se necessário
 sudo yum install -y python3 python3-pip
 
-# Instalar Node.js e npm
+# Instalar Node.js e npm (v18)
 curl -fsSL https://rpm.nodesource.com/setup_18.x | sudo bash -
 sudo yum install -y nodejs
 
-# Instalar PM2 globalmente para gerenciar processos
+# Instalar PM2
 sudo npm install -g pm2
 
-# Navegar para o diretório da aplicação
+# Caminho da aplicação
 cd /home/ec2-user/app
 
-# Instalar dependências do backend
+# Backend: instalar dependências e preparar banco
 echo "=== Instalando dependências do backend ==="
 cd backend
 pip3 install -r requirements.txt
@@ -42,56 +41,39 @@ except Exception as e:
     print(f'❌ Erro inicializando BD: {e}')
 "
 
-# Instalar dependências do frontend
+# Frontend: instalar dependências e build
 echo "=== Instalando dependências do frontend ==="
 cd ../frontend
 npm install
 
-# Build do frontend
 echo "=== Construindo frontend ==="
 npm run build
 
-# Copiar arquivos build para servir estaticamente
+# Copiar arquivos do frontend para diretório público
+echo "=== Atualizando arquivos públicos do frontend ==="
 sudo mkdir -p /var/www/html
 sudo cp -r build/* /var/www/html/
 
-# Instalar e configurar nginx
+# Instalar Nginx
 echo "=== Configurando Nginx ==="
 sudo yum install -y nginx
 
-# Configurar nginx
+# Criar configuração do Nginx (evitando proxies redundantes)
 sudo tee /etc/nginx/conf.d/app.conf > /dev/null <<EOF
 server {
     listen 80;
     server_name _;
 
-    # Servir arquivos estáticos do frontend
+    # Servir frontend (React build)
     location / {
         root /var/www/html;
         index index.html;
         try_files \$uri \$uri/ /index.html;
     }
 
-    # Proxy para API backend
+    # Proxy para FastAPI
     location /api/ {
         proxy_pass http://localhost:8000/;
-        proxy_set_header Host \$host;
-        proxy_set_header X-Real-IP \$remote_addr;
-        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto \$scheme;
-    }
-
-    # Proxy direto para desenvolvimento
-    location /tasks/ {
-        proxy_pass http://localhost:8000/tasks/;
-        proxy_set_header Host \$host;
-        proxy_set_header X-Real-IP \$remote_addr;
-        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto \$scheme;
-    }
-
-    location /docs {
-        proxy_pass http://localhost:8000/docs;
         proxy_set_header Host \$host;
         proxy_set_header X-Real-IP \$remote_addr;
         proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
@@ -100,19 +82,27 @@ server {
 }
 EOF
 
-# Iniciar e habilitar nginx
-sudo systemctl start nginx
+# Reiniciar Nginx
+sudo systemctl restart nginx
 sudo systemctl enable nginx
 
-# Voltar para backend e iniciar aplicação
-echo "=== Iniciando aplicação backend ==="
+# Voltar ao backend e iniciar com PM2
+echo "=== Iniciando aplicação backend com PM2 ==="
 cd /home/ec2-user/app/backend
 
-# Configurar PM2 para iniciar o backend
-pm2 start main.py --name "todo-backend" --interpreter python3
-pm2 startup
+# Verifica se o app já está rodando e reinicia ou inicia do zero
+if pm2 describe todo-backend > /dev/null; then
+    pm2 restart todo-backend
+else
+    pm2 start main.py --name "todo-backend" --interpreter python3
+fi
+
+# Garantir que PM2 inicie no boot
+pm2 startup | tail -n 1 | bash
 pm2 save
 
+# Mostrar URLs de acesso
+PUBLIC_IP=$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4)
 echo "=== Deploy concluído! ==="
-echo "Frontend disponível em: http://$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4)"
-echo "API disponível em: http://$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4)/docs"
+echo "✅ Frontend: http://$PUBLIC_IP/"
+echo "✅ Backend (FastAPI docs): http://$PUBLIC_IP/api/docs"

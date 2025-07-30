@@ -1,8 +1,8 @@
 # 📝 Lista de Tarefas - Aplicação Web com CI/CD
 
 ## 👥 Integrantes da Dupla
-- [Seu Nome]
-- [Nome do Parceiro]
+- João Pedro Cordeiro Guimarães - 493703
+- Francisco Ulisses Alves de Lima - 496549
 
 ## 📖 Descrição da Aplicação
 
@@ -251,7 +251,3 @@ sudo tail -f /var/log/nginx/error.log
 ## 📄 Licença
 
 Este projeto foi desenvolvido para fins educacionais como parte do trabalho final da disciplina de Computação em Nuvem.
-
----
-
-**Nota**: Lembre-se de configurar corretamente as variáveis de ambiente e secrets antes do deploy!
