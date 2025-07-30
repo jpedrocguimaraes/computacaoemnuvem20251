@@ -251,7 +251,3 @@ sudo tail -f /var/log/nginx/error.log
 ## 📄 Licença
 
 Este projeto foi desenvolvido para fins educacionais como parte do trabalho final da disciplina de Computação em Nuvem.
-
----
-
-**Nota**: Lembre-se de configurar corretamente as variáveis de ambiente e secrets antes do deploy!

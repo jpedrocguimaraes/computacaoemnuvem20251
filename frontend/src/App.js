@@ -86,7 +86,7 @@ function App() {
     <div className="container">
       <div className="header">
         <h1>📝 Lista de Tarefas</h1>
-        <p>Gerencie suas tarefas de forma simples e eficiente!!!</p>
+        <p>Gerencie suas tarefas de forma simples e eficiente!!</p>
       </div>
 
       {error && <div className="error">{error}</div>}
