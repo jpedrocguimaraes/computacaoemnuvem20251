@@ -5,11 +5,33 @@ from sqlalchemy.orm import declarative_base, sessionmaker, Session
 from pydantic import BaseModel
 from datetime import datetime
 from typing import List, Optional
+from dotenv import load_dotenv
 import os
+
+# Carregar variáveis de ambiente
+load_dotenv()
 
 # Database setup
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./tasks.db")
-engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
+
+# Configuração específica para diferentes tipos de banco
+if DATABASE_URL.startswith("sqlite"):
+    # SQLite (desenvolvimento)
+    engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
+elif DATABASE_URL.startswith("postgresql"):
+    # PostgreSQL (RDS)
+    engine = create_engine(
+        DATABASE_URL,
+        pool_size=10,                    # Pool de conexões
+        max_overflow=20,                 # Máximo de conexões extras
+        pool_pre_ping=True,              # Verificar conexões antes de usar
+        pool_recycle=300,                # Reciclar conexões a cada 5 min
+        echo=os.getenv("ENVIRONMENT") == "development"  # Log SQL em dev
+    )
+else:
+    # Fallback para outros bancos
+    engine = create_engine(DATABASE_URL)
+
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 

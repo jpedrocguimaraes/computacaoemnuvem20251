@@ -24,8 +24,23 @@ echo "=== Instalando dependências do backend ==="
 cd backend
 pip3 install -r requirements.txt
 
+# Configurar arquivo .env se não existir
+if [ ! -f .env ]; then
+    echo "DATABASE_URL=sqlite:///./tasks.db" > .env
+    echo "ENVIRONMENT=production" >> .env
+    echo "PORT=8000" >> .env
+fi
+
 # Inicializar banco de dados
-python3 -c "from main import Base, engine; Base.metadata.create_all(bind=engine)"
+echo "=== Inicializando banco de dados ==="
+python3 -c "
+try:
+    from main import Base, engine
+    Base.metadata.create_all(bind=engine)
+    print('✅ Banco de dados inicializado')
+except Exception as e:
+    print(f'❌ Erro inicializando BD: {e}')
+"
 
 # Instalar dependências do frontend
 echo "=== Instalando dependências do frontend ==="
